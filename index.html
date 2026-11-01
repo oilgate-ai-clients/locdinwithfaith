@@ -795,7 +795,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
 <div class="cbar">
   <div class="tag"><i></i>Design preview<span class="long">&nbsp;· concept, not live</span></div>
   <nav class="tabs" id="tabs">
-    <a href="#home">Home</a><a href="#services">Services</a><a href="#book">Booking</a><a href="#checkout">Stripe deposit</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#policies">Policies</a><a href="#account">Client account</a><a href="#texts">SMS texts</a><a href="#email">Email campaign</a><a href="#admin">Admin</a>
+    <a href="#home">Home</a><a href="#services">Services</a><a href="#book">Booking</a><a href="#checkout">Stripe deposit</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#policies">Policies</a><a href="#account">Client account</a><a href="#texts">SMS texts</a><a href="#email">Email campaign</a><a href="#admin">Admin</a><a href="#analytics">Analytics</a>
   </nav>
   <button class="nctoggle" id="nctoggle" title="Dotted gold underline = still needs Faith's confirmation"><span class="sw"></span>Needs-confirmation marks</button>
 </div>
@@ -881,6 +881,18 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
     </div>
   </section>
 
+    <section class="blk" style="padding-top:0">
+    <div class="wrap">
+      <div class="band" style="display:block">
+        <div class="eyebrow">Her social is the storefront</div>
+        <h2 class="h-l" style="margin:14px 0 12px">Watch the work. <em>Then book it.</em></h2>
+        <p class="lead" style="max-width:60ch">Most of Faith's clients find her on Instagram first. The site keeps that going: every reel links to a service you can book, and every "link in bio" tap lands on the booking page.</p>
+        <div class="row-btns" style="margin-top:18px;flex-wrap:wrap"><a class="btn btn-primary btn-sm" href="https://www.instagram.com/locd.inwithfaith/" target="_blank" rel="noopener">@locd.inwithfaith</a><a class="btn-line" href="https://www.instagram.com/faith.cordero22/" target="_blank" rel="noopener" style="color:inherit">@faith.cordero22</a><a class="btn-line" href="#book" style="color:inherit">Link in bio → Book</a></div>
+        <div class="ncnote" style="margin-top:14px">Concept: IG reels embed here and refresh automatically. Visits from IG are tracked on the Analytics tab.</div>
+      </div>
+    </div>
+  </section>
+
   <section class="blk paper">
     <div class="wrap meet">
       <div class="arch"><img data-im="portrait" alt="Faith Cordero" style="object-position:50% 40%"></div>
@@ -915,7 +927,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
   <div class="wrap">
     <div class="grid">
       <div><a href="#home" class="logo"><svg class="bow" viewBox="0 0 48 30"><use href="#i-bow"/></svg><span><b>Loc'd In</b><em>with Faith</em></span></a><p style="margin-top:16px;max-width:34ch">PHX Loctician 🎀 Retwists • Styles • Washes. Home based, travel available.</p></div>
-      <div><h5>Visit</h5><ul><li>Phoenix, AZ</li><li><span class="nc" data-nc="GlossGenius lists 17 W Vernon Ave. Show it publicly, or send it after booking? Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
+      <div><h5>Visit</h5><ul><li>Central Phoenix, AZ</li><li><span class="nc" data-nc="Exact address stays private until she says otherwise. Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
       <div><h5>Hours</h5><ul><li><span class="nc" data-nc="IG menu: Mon–Fri 10 AM–12 AM. GlossGenius: 8 AM–11:30 PM (Tue shows 11 PM). Sat/Sun cut off. Needs confirmation">Mon – Fri · 10 AM – 12 AM</span></li><li><span class="nc" data-nc="Weekend hours are cut off on the IG menu">Sat – Sun · by appointment</span></li></ul></div>
       <div><h5>Follow</h5><ul><li>@locd.inwithfaith</li><li>@faith.cordero22</li><li><a href="#policies">Policies</a> · <a href="#policies">SMS terms</a></li></ul></div>
     </div>
@@ -995,6 +1007,8 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
           <div class="bstep" data-step="3">
             <h2>Where should we <em>meet?</em></h2><p class="sub">Come to Faith's home studio or have her come to you.</p>
             <div class="opts" id="locopts"></div>
+            <div class="field" style="margin-top:16px"><label>Coming to you? Where should Faith do your hair? <span style="font-weight:400;color:var(--dmuted)">(mobile visits only)</span></label><input placeholder="Street address, apt/gate code, Phoenix AZ" autocomplete="street-address"><small style="display:block;margin-top:6px;color:var(--dmuted);font-size:12px">Faith gets this address with GPS directions on her phone. It's never shown publicly.</small></div>
+            <div class="ncnote" style="margin-top:8px">Studio visits: the site only shows "Central Phoenix". The exact address and directions go out after the deposit is paid.</div>
             <div class="ncnote" style="margin-top:14px">Mobile fees come from her IG menu. The service area and whether it's bookable online need confirmation.</div>
           </div>
           <div class="bstep" data-step="4">
@@ -1021,6 +1035,12 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
                 <div class="appt" style="margin-top:0"><div class="dt"><small id="cf-dow">THU</small><b id="cf-d">12</b></div><div class="tx"><b id="cf-svc">Retwist + Style + Wash</b><span id="cf-when">Thu, Nov 12 · 10:00 AM · 2 hr 15 min</span><br><span id="cf-loc">At Faith's · Phoenix</span></div></div>
                 <div class="sl" style="margin-top:14px"><span>Deposit paid</span><span id="cf-dep">$20.00</span></div>
                 <div class="sl"><span>Due at your appointment</span><span id="cf-bal">$65.00</span></div>
+                <div class="dirbox" style="margin-top:16px;border:1px solid var(--dline);border-radius:18px;padding:16px 18px;background:#fbf6f1">
+                  <b style="display:block;font-size:15px;margin-bottom:8px">📍 Getting there</b>
+                  <ol style="margin:0 0 12px 18px;font-size:13.5px;line-height:1.6;color:var(--dmuted)"><li><b>Your exact address is unlocked.</b> We also texted and emailed it to you, because your deposit is paid.</li><li>Tap <b>Get directions</b> to open turn-by-turn GPS in Google Maps, Apple Maps, or Waze.</li><li>On the day, you get a reminder text with the same directions link. Text Faith when you're outside.</li></ol>
+                  <div class="row-btns" style="margin-top:0"><button class="btn btn-dark btn-sm" data-toast>📍 Get directions</button><button class="btn-line" data-toast>Apple Maps</button><button class="btn-line" data-toast>Waze</button></div>
+                  <small style="display:block;margin-top:8px;color:var(--dmuted);font-size:12px">Mobile visit? Faith gets GPS directions to the address you entered, and you get an "On my way" text.</small>
+                </div>
                 <div class="row-btns"><button class="btn-line" data-toast>Add to Apple Calendar</button><button class="btn-line" data-toast>Add to Google</button><a href="#account" class="btn-line">View in my account</a></div>
               </div>
             </div>
@@ -1103,7 +1123,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
   <div class="wrap">
     <div class="grid">
       <div><a href="#home" class="logo"><svg class="bow" viewBox="0 0 48 30"><use href="#i-bow"/></svg><span><b>Loc'd In</b><em>with Faith</em></span></a><p style="margin-top:16px;max-width:34ch">PHX Loctician 🎀 Retwists • Styles • Washes. Home based, travel available.</p></div>
-      <div><h5>Visit</h5><ul><li>Phoenix, AZ</li><li><span class="nc" data-nc="GlossGenius lists 17 W Vernon Ave. Show it publicly, or send it after booking? Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
+      <div><h5>Visit</h5><ul><li>Central Phoenix, AZ</li><li><span class="nc" data-nc="Exact address stays private until she says otherwise. Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
       <div><h5>Hours</h5><ul><li><span class="nc" data-nc="IG menu: Mon–Fri 10 AM–12 AM. GlossGenius: 8 AM–11:30 PM (Tue shows 11 PM). Sat/Sun cut off. Needs confirmation">Mon – Fri · 10 AM – 12 AM</span></li><li><span class="nc" data-nc="Weekend hours are cut off on the IG menu">Sat – Sun · by appointment</span></li></ul></div>
       <div><h5>Follow</h5><ul><li>@locd.inwithfaith</li><li>@faith.cordero22</li><li><a href="#policies">Policies</a> · <a href="#policies">SMS terms</a></li></ul></div>
     </div>
@@ -1124,7 +1144,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
         <p class="lead" style="color:rgba(243,227,211,.82)">Retwists • Styles • Washes. I'm home based in Phoenix, and I travel too. Come get Loc'd In.</p>
         <div class="factlist">
           <div class="fact"><small>Specialty</small><b>Retwists, styles &amp; washes</b></div>
-          <div class="fact"><small>Where</small><b>🏠 Home studio, Phoenix</b></div>
+          <div class="fact"><small>Where</small><b>🏠 Home studio, Central Phoenix</b><small style="display:block;color:rgba(243,227,211,.7);font-size:12px">Exact address &amp; directions sent after booking</small></div>
           <div class="fact"><small>Travel</small><b>I'll come to you</b></div>
           <div class="fact"><small>Booking</small><b>Online now, no DMs</b></div>
         </div>
@@ -1140,7 +1160,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
   <div class="wrap">
     <div class="grid">
       <div><a href="#home" class="logo"><svg class="bow" viewBox="0 0 48 30"><use href="#i-bow"/></svg><span><b>Loc'd In</b><em>with Faith</em></span></a><p style="margin-top:16px;max-width:34ch">PHX Loctician 🎀 Retwists • Styles • Washes. Home based, travel available.</p></div>
-      <div><h5>Visit</h5><ul><li>Phoenix, AZ</li><li><span class="nc" data-nc="GlossGenius lists 17 W Vernon Ave. Show it publicly, or send it after booking? Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
+      <div><h5>Visit</h5><ul><li>Central Phoenix, AZ</li><li><span class="nc" data-nc="Exact address stays private until she says otherwise. Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
       <div><h5>Hours</h5><ul><li><span class="nc" data-nc="IG menu: Mon–Fri 10 AM–12 AM. GlossGenius: 8 AM–11:30 PM (Tue shows 11 PM). Sat/Sun cut off. Needs confirmation">Mon – Fri · 10 AM – 12 AM</span></li><li><span class="nc" data-nc="Weekend hours are cut off on the IG menu">Sat – Sun · by appointment</span></li></ul></div>
       <div><h5>Follow</h5><ul><li>@locd.inwithfaith</li><li>@faith.cordero22</li><li><a href="#policies">Policies</a> · <a href="#policies">SMS terms</a></li></ul></div>
     </div>
@@ -1172,7 +1192,7 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
   <div class="wrap">
     <div class="grid">
       <div><a href="#home" class="logo"><svg class="bow" viewBox="0 0 48 30"><use href="#i-bow"/></svg><span><b>Loc'd In</b><em>with Faith</em></span></a><p style="margin-top:16px;max-width:34ch">PHX Loctician 🎀 Retwists • Styles • Washes. Home based, travel available.</p></div>
-      <div><h5>Visit</h5><ul><li>Phoenix, AZ</li><li><span class="nc" data-nc="GlossGenius lists 17 W Vernon Ave. Show it publicly, or send it after booking? Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
+      <div><h5>Visit</h5><ul><li>Central Phoenix, AZ</li><li><span class="nc" data-nc="Exact address stays private until she says otherwise. Needs confirmation">Exact address sent after booking</span></li><li>(480) 806-7675</li></ul></div>
       <div><h5>Hours</h5><ul><li><span class="nc" data-nc="IG menu: Mon–Fri 10 AM–12 AM. GlossGenius: 8 AM–11:30 PM (Tue shows 11 PM). Sat/Sun cut off. Needs confirmation">Mon – Fri · 10 AM – 12 AM</span></li><li><span class="nc" data-nc="Weekend hours are cut off on the IG menu">Sat – Sun · by appointment</span></li></ul></div>
       <div><h5>Follow</h5><ul><li>@locd.inwithfaith</li><li>@faith.cordero22</li><li><a href="#policies">Policies</a> · <a href="#policies">SMS terms</a></li></ul></div>
     </div>
@@ -1323,6 +1343,15 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
       </div>
     </div>
   </div>
+  <div class="wrap" style="padding:10px 0 60px"><div class="apanel" style="max-width:900px">
+    <div class="ph"><h3>How the calendar &amp; texts would work</h3><span class="chip line">Proposal · needs Faith's choice</span></div>
+    <p style="font-size:14px;line-height:1.6;color:var(--muted);margin:0 0 10px">Every booking from the site lands on <b>one calendar</b>, so she can't get double-booked. The same booking then triggers the texts above.</p>
+    <ul style="font-size:14px;line-height:1.7;margin:0 0 10px 18px;color:var(--muted)">
+      <li><b>Option A: keep GlossGenius.</b> GlossGenius stays her calendar and keeps sending reminders. It already includes unlimited reminder texts. The site sends clients to her GlossGenius booking, or blocks the same times.</li>
+      <li><b>Option B: site booking + Google Calendar.</b> The site takes the required Stripe deposit and puts the appointment on her Google Calendar. Texts go out from a business number on her own Twilio account, which needs A2P 10DLC carrier registration (about $4 + $15 one-time, $2/month, plus a small per-text fee).</li>
+    </ul>
+    <div class="ncnote">Which calendar she uses today, and which number texts come from, need confirmation. Nothing is connected in this preview.</div>
+  </div></div>
 </section>
 
 <!-- ============ EMAIL ============ -->
@@ -1442,6 +1471,51 @@ This is a design concept for your site from Oilgate AI &mdash; nothing is live y
   </div>
   <nav class="abar"><a class="on"><svg><use href="#i-home"/></svg>Today</a><a><svg><use href="#i-cal"/></svg>Calendar</a><a><svg><use href="#i-users"/></svg>Clients</a><a><svg><use href="#i-send"/></svg>Campaigns</a><a><svg><use href="#i-cog"/></svg>Settings</a></nav>
 </section>
+<!-- ============ ANALYTICS ============ -->
+<section class="screen" id="s-analytics">
+  <div class="dk-page"><div class="wrap page-hero" style="padding-bottom:24px">
+    <div class="atop" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div><div class="eyebrow">Analytics · Faith's view</div><h1 class="h-l" style="margin:14px 0 8px">How the <em>business</em> is doing.</h1><p class="lead">Last 30 days. Bookings, deposits, and where clients come from, with Instagram as its own line.</p></div>
+      <span class="sample">SAMPLE DATA · not her real numbers</span>
+    </div>
+    <div class="kpis" style="margin-top:22px">
+      <div class="kpi hl"><small>Bookings</small><b>38</b><span>▲ 6 vs prior 30 days (sample)</span></div>
+      <div class="kpi"><small>Deposits collected</small><b>$860</b><span>via Stripe (sample)</span></div>
+      <div class="kpi"><small>No-show rate</small><b>3%</b><span>1 of 38 · deposit kept (sample)</span></div>
+      <div class="kpi"><small>Rebook rate</small><b>71%</b><span>booked again within 8 weeks (sample)</span></div>
+    </div>
+    <div class="agrid2" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+      <div class="apanel"><div class="ph"><h3>Site visits</h3><span class="chip line">Sample</span></div>
+        <div style="font-family:var(--serif);font-size:34px;font-weight:600">1,240 <small style="font-size:14px;color:var(--muted);font-family:inherit">visits · 3.1% booked</small></div>
+        <div class="bars" style="margin-top:12px"><div style="height:40%"><span>W1</span></div><div style="height:55%"><span>W2</span></div><div style="height:85%"><span>W3</span></div><div style="height:65%"><span>W4</span></div></div>
+      </div>
+      <div class="apanel"><div class="ph"><h3>Traffic sources</h3><span class="chip line">Sample</span></div>
+        <div class="money-rows">
+          <div><span>Instagram (@locd.inwithfaith + link in bio)</span><span>58%</span></div>
+          <div><span>Direct / text links</span><span>17%</span></div>
+          <div><span>Google search &amp; Maps</span><span>14%</span></div>
+          <div><span>GlossGenius</span><span>7%</span></div>
+          <div><span>Other</span><span>4%</span></div>
+        </div></div>
+      <div class="apanel"><div class="ph"><h3>Top services</h3><span class="chip line">Sample</span></div>
+        <div class="money-rows">
+          <div><span>Retwist + Style ($70)</span><span>21 bookings</span></div>
+          <div><span>All 3 ($85)</span><span>9 bookings</span></div>
+          <div><span>Add-on: Wash (+$15)</span><span>14 adds</span></div>
+          <div><span>Add-on: Detox (+$20)</span><span>6 adds</span></div>
+          <div><span>Reattachments ($300)</span><span>2 bookings</span></div>
+        </div></div>
+      <div class="apanel"><div class="ph"><h3>Top Instagram posts → bookings</h3><span class="chip line">Sample</span></div>
+        <div class="money-rows">
+          <div><span>Reel: "Heard you needed a loctician in PHX"</span><span>7 bookings</span></div>
+          <div><span>Reel: Retwist in progress</span><span>5 bookings</span></div>
+          <div><span>Post: Retwist Menu</span><span>4 bookings</span></div>
+        </div>
+        <div class="ncnote" style="margin-top:10px">Concept: tracked links on each IG post show which content brings in paying clients.</div></div>
+    </div>
+    <div class="ncnote" style="margin-top:18px">Every number on this tab is made-up sample data for the preview. Real numbers would come from the live site, Stripe, and her booking calendar.</div>
+  </div></div>
+</section>
 </main>
 <div class="toast" id="toast">Concept preview: nothing is sent or charged.</div>
 
@@ -1461,7 +1535,7 @@ const ADD={
  prep:{name:'Preparation',price:100,min:120,desc:'Dedicated prep for a smoother service. YOUR LOCS NEED TO BE PREPPED PROPERLY FOR ME TO REATTACH.',nc:'Required or optional? Needs confirmation'}
 };
 const LOC={
- studio:{name:"At Faith's · Phoenix",short:"At Faith's",fee:0,desc:'Home studio in Phoenix. Exact address sent after you book.',ic:'i-home'},
+ studio:{name:"At Faith's · Central Phoenix",short:"At Faith's",fee:0,desc:'Home studio in Central Phoenix. Exact address and directions sent after you book.',ic:'i-home'},
  m30:{name:'Mobile · under 30 min away',short:'Mobile visit',fee:20,desc:'Faith comes to you.',ic:'i-car'},
  m31:{name:'Mobile · over 30 min away',short:'Mobile visit',fee:35,desc:'Faith comes to you.',ic:'i-car'}
 };
