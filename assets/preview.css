@@ -28,3 +28,4 @@ html.framed{--bar:0px}html.framed #og-welcome,html.framed .cbar{display:none}
 .area-map{position:relative;min-height:190px}.area-map small{position:absolute;color:var(--dark);background:var(--paper);padding:1px 6px}.map-north{top:5px}.map-south{bottom:5px}.treatments{padding:16px;color:var(--dark)}
 
 .area-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}.area-map span{position:relative;background:var(--tone-rgba-250-244-238-94)}
+.addon-photo{display:block;width:96px;height:76px;object-fit:cover;border-radius:8px;margin-bottom:8px}
