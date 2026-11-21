@@ -1,0 +1,154 @@
+/* Loc'd In with Faith — Design Tokens (Round 3: Chrome Bubblegum Noir)
+ * Sampled directly from Faith's reattachment flyer (round3-ref/faith-reattachment-flyer.png):
+ *   Flyer glossy pinks: #F8B8C8, #FCC0D0, #F8B4C4, #EE75AE
+ *   Elevated vibrant bubblegum accent: #FF6BB5 (OKLCH ~72% 0.21 348deg, HSL S=100%)
+ * WCAG AA Contrast Pairs:
+ *   --text (#FFF5F9) on --night (#0A080A): 18.4:1 (AAA)
+ *   --text (#FFF5F9) on --char (#1D151B): 15.8:1 (AAA)
+ *   --pink-btn-text (#12080D) on --pink (#FF6BB5): 8.4:1 (AAA)
+ *   --pink-btn-text (#12080D) on --pink-soft (#F8B8C8): 11.6:1 (AAA)
+ *   --pink-deep (#9E1457) on --paper (#FDF6F9): 7.1:1 (AAA)
+ *   --dark (#181014) on --paper (#FDF6F9): 17.1:1 (AAA)
+ *   --dmuted (#5C4953) on --paper (#FDF6F9): 7.4:1 (AAA)
+ *   --pink-chrome (#FF9ECE) on --night (#0A080A): 10.6:1 (AAA)
+ */
+:root {
+  /* Core brand & flyer-sampled glossy pink scale */
+  --night: #0A080A;
+  --ink: #130E12;
+  --char: #1D151B;
+  --char2: #281D25;
+  --bg: #0A080A;
+  --surface: #130E12;
+  --surface-2: #1D151B;
+
+  --paper: #FDF6F9;
+  --paper2: #F7E8EF;
+  --cream: #FFF5F9;
+  --white: #FFFFFF;
+  --dark: #181014;
+  --text: #FFF5F9;
+  --text-dark: #181014;
+  --text-muted: rgba(255, 245, 249, .78);
+  --muted: rgba(255, 245, 249, .78);
+  --dmuted: #5C4953;
+
+  --pink: #FF6BB5;
+  --pink-bright: #FF86C4;
+  --pink-chrome: #FF9ECE;
+  --pink-soft: #F8B8C8;
+  --pink-pale: #FFE3EE;
+  --pink-highlight: #FCC0D0;
+  --pink-deep: #9E1457;
+  --pink-btn-text: #12080D;
+
+  --accent: var(--pink);
+  --accent-contrast: var(--pink-btn-text);
+  --blush: var(--pink-chrome);
+  --blush2: var(--pink-soft);
+  --rose: var(--pink);
+  --gold: #F8B8C8;
+
+  /* Borders, hairlines & glows */
+  --border: rgba(255, 227, 238, .16);
+  --line: rgba(255, 227, 238, .16);
+  --line2: rgba(255, 227, 238, .30);
+  --dline: rgba(24, 16, 20, .14);
+  --pink-border: rgba(255, 134, 196, .44);
+  --pink-border-strong: rgba(255, 107, 181, .82);
+  --pink-glow: rgba(255, 107, 181, .24);
+  --blush-glow: rgba(255, 107, 181, .22);
+  --pink-tint-bg: rgba(255, 107, 181, .14);
+  --pink-tint-soft: rgba(248, 184, 200, .18);
+  --pink-gloss-grad: linear-gradient(135deg, #FF9ECE 0%, #FF6BB5 52%, #F8B8C8 100%);
+  --pink-chrome-grad: linear-gradient(180deg, #FFE3EE 0%, #FF86C4 45%, #F8B4C4 100%);
+
+  /* Semantic status & focus */
+  --success: #2A8C56;
+  --success-bg: rgba(42, 140, 86, .16);
+  --success-text: #9FE0B6;
+  --success-dark: #146337;
+  --warning: #A86B00;
+  --warning-bg: #FFF7E0;
+  --warning-border: #E6CF7A;
+  --warning-ink: #4A3F00;
+  --danger: #C0212D;
+  --danger-light: #FF8F8F;
+  --focus: #FF6BB5;
+
+  /* Overlay, surface-helper & third-party brand tokens (keeps 0 raw literals elsewhere) */
+  --overlay-bar: rgba(10, 8, 10, .92);
+  --overlay-nav: rgba(10, 8, 10, .96);
+  --overlay-hero-top: rgba(10, 8, 10, .28);
+  --overlay-hero-mid: rgba(10, 8, 10, .18);
+  --overlay-hero-bot: rgba(10, 8, 10, .86);
+  --overlay-card: rgba(19, 14, 18, .86);
+  --overlay-scrim: rgba(10, 8, 10, .72);
+  --overlay-deep: rgba(10, 8, 10, .88);
+  --overlay-tint-light: rgba(255, 255, 255, .08);
+  --overlay-tint-mid: rgba(255, 255, 255, .14);
+  --overlay-ink-06: rgba(24, 16, 20, .06);
+  --overlay-paper-94: rgba(253, 246, 249, .94);
+  --surface-paper-3: #F2DCE6;
+  --surface-cream-86: rgba(255, 245, 249, .88);
+  --surface-cream-70: rgba(255, 245, 249, .74);
+  --surface-cream-55: rgba(255, 245, 249, .62);
+  --surface-cream-10: rgba(255, 245, 249, .10);
+  --surface-cream-05: rgba(255, 245, 249, .05);
+  --ink-mid: #3E2D36;
+  --ink-soft: #5C4953;
+  --ink-border: #D9C4CE;
+
+  /* Map tokens (legal clean CARTO/OSM surface) */
+  --map-zone-bg: rgba(255, 107, 181, .28);
+  --map-zone-border: #FF6BB5;
+  --map-zone-ink: #12080D;
+  --map-attr-bg: rgba(10, 8, 10, .78);
+  --map-attr-text: #FFF5F9;
+
+  /* Checkout & preview widget neutrals */
+  --paymode-bg: #FFF5FA;
+  --paymode-border: #FF86C4;
+  --paymode-ink: #4A0E2D;
+  --ck-surface: #FFFFFF;
+  --ck-left: #F9EFF4;
+  --ck-text: #1A1F36;
+  --ck-muted: #555D6E;
+  --ck-border: #E0D5DC;
+  --stripe-blue: #0A66FF;
+  --sms-bg: #E9E9EB;
+  --sms-text: #111111;
+  --card-visa: #1A1F71;
+  --card-mc-1: #EB001B;
+  --card-mc-2: #F79E1B;
+  --card-amex: #2E77BC;
+
+  /* Shadows (<= 3 elevation levels) */
+  --shadow-sm: 0 4px 14px rgba(10, 8, 10, .18);
+  --soft-shadow: 0 12px 36px rgba(10, 8, 10, .28);
+  --ring-shadow: 0 0 0 2px var(--pink);
+
+  /* Typography (<= 2 families) */
+  --serif: 'Cormorant', Georgia, serif;
+  --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  /* Size-tied radius scale */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+  --r: 16px;
+
+  /* 4px/8px spacing tokens */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --bar: 44px;
+}

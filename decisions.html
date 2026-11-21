@@ -1,67 +1,427 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Decisions for Faith · Loc'd In with Faith</title>
-<meta name="robots" content="noindex">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M1NB9P5ZH"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-5M1NB9P5ZH');</script>
-<link rel="icon" href="assets/bow.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/fonts.css">
-<style>
-:root{--night:#0b0b0b;--paper:#faf4ee;--dark:#1a1514;--blush:#e8b4a8;--muted:#6b5f59}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--dark);font:16px/1.6 'DM Sans',system-ui,sans-serif}
-.bar{position:sticky;top:0;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--dark);color:var(--paper);font-size:14px}
-.bar a{color:var(--paper);border:1px solid var(--blush);border-radius:8px;padding:8px 12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-main{max-width:820px;margin:0 auto;padding:24px 20px 64px}
-h1{font-family:'Cormorant',Georgia,serif;font-size:clamp(34px,6vw,52px);line-height:1.05;margin:8px 0 8px}
-h2{font-family:'Cormorant',Georgia,serif;font-size:28px;margin:28px 0 8px;border-bottom:1px solid #e3d6cc;padding-bottom:4px}
-ol{padding-left:22px;margin:0}li{margin:0 0 10px}li b{display:block}
-.lead{color:var(--muted);margin:0 0 8px}
-a{color:#8a3f33}
-</style></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Decisions for Faith · Loc'd In with Faith</title>
+  <meta name="description" content="Interactive decisions and one-page summary for Loc'd In with Faith.">
+  <meta property="og:image" content="https://locdinwithfaith.oilgateai.com/assets/hero-locs.webp">
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-5M1NB9P5ZH');(function(){var l=0;function g(){if(l)return;l=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M1NB9P5ZH';document.head.appendChild(s);}['pointerdown','keydown','touchstart','scroll'].forEach(function(e){window.addEventListener(e,g,{once:true,passive:true});});window.addEventListener('load',function(){setTimeout(g,6000);},{once:true});})();</script>
+  <link rel="icon" href="assets/bow.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/tokens.css?v=r3-20261120">
+  <link rel="stylesheet" href="assets/fonts.css?v=r3-20261120">
+  <link rel="stylesheet" href="assets/preview.css?v=r3-20261120">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { max-width: 100%; overflow-x: clip; }
+    body { background: var(--paper); color: var(--dark); font: 15px/1.6 var(--sans); margin: 0; padding-top: 0; }
+    button, input, textarea, select, code, pre { font-family: inherit; box-sizing: border-box; max-width: 100%; min-width: 0; }
+    code { font-size: 13px; background: var(--rose-tint); color: var(--pink-deep); padding: 0 4px; border-radius: var(--r-xs); overflow-wrap: anywhere; }
+    @media (max-width: 720px) { .dec-bar { position: static; } }
+    .dec-bar {
+      position: sticky; top: 0; z-index: 80;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: var(--night); color: var(--cream);
+      border-bottom: 1px solid var(--pink-border);
+    }
+    .dec-bar-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .dec-count {
+      font-size: 12px; font-weight: 700; padding: 4px 12px;
+      border-radius: var(--r-pill); background: var(--char2); color: var(--pink-chrome);
+      border: 1px solid var(--pink-border);
+    }
+    .dec-btn {
+      min-height: 44px; padding: 0 16px; border-radius: var(--r-pill);
+      font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; justify-content: center;
+      text-decoration: none; cursor: pointer;
+    }
+    .dec-btn-pink { background: var(--pink); color: var(--pink-btn-text); border: 0; }
+    .dec-btn-ghost { border: 1px solid var(--pink-border); color: var(--cream); background: transparent; }
+    .dec-main { max-width: 960px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 24px; min-width: 0; }
+    .dec-main > *, .op-grid > *, .q-list > *, .q-fields > *, .hours-grid > *, .upload-grid > * { min-width: 0; max-width: 100%; }
+    .op-box, .q-card, .q-desc, .q-opt, li, p, a, b, pre { overflow-wrap: anywhere; word-break: break-word; }
+    .dec-hero {
+      display: grid; gap: 20px; align-items: center;
+      background: var(--night); color: var(--cream);
+      border: 1.5px solid var(--pink-border); border-radius: var(--r-lg); padding: 24px;
+    }
+    @media (min-width: 720px) { .dec-hero { grid-template-columns: 1.25fr .75fr; } }
+    .dec-hero-copy h1 { font-family: var(--serif); font-size: clamp(40px, 6vw, 56px); line-height: 1; margin: 8px 0; color: var(--cream); }
+    .dec-hero-copy p { color: var(--surface-cream-86); max-width: 64ch; margin: 0 0 16px; }
+    .dec-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .dec-hero-card {
+      background: var(--pink); color: var(--pink-btn-text); border-radius: var(--r-md);
+      padding: 12px; display: grid; gap: 8px;
+    }
+    .dec-hero-card img { width: 100%; height: 360px; object-fit: cover; border-radius: var(--r-sm); display: block; }
+    .dec-hero-card b { font-size: 14px; color: var(--pink-btn-text); }
+    .dec-status-banner {
+      padding: 12px 16px; border-radius: var(--r-md);
+      background: var(--paymode-bg); border: 1px solid var(--paymode-border); color: var(--paymode-ink);
+      font-size: 14px; font-weight: 600;
+    }
+    .onepager {
+      background: var(--night); color: var(--cream); border-radius: var(--r-lg);
+      padding: 24px; border: 1.5px solid var(--pink-border); display: grid; gap: 16px;
+    }
+    .onepager h2 { font-family: var(--serif); font-size: 32px; color: var(--pink-chrome); margin: 0; }
+    .op-grid { display: grid; gap: 16px; }
+    @media (min-width: 760px) { .op-grid { grid-template-columns: 1fr 1fr; } }
+    .op-box { background: var(--ink); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; }
+    .op-box h3 { font-family: var(--serif); font-size: 22px; color: var(--pink-bright); margin: 0 0 8px; }
+    .op-box ul, .op-box ol { margin: 0; padding-left: 20px; color: var(--surface-cream-86); font-size: 14px; display: grid; gap: 4px; }
+    .op-box p { margin: 0; color: var(--surface-cream-86); font-size: 14px; }
+    .q-list { display: grid; gap: 20px; }
+    .q-card {
+      background: var(--white); border: 1px solid var(--dline); border-radius: var(--r-lg);
+      padding: 20px; display: grid; gap: 12px;
+    }
+    .q-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--dline); padding-bottom: 8px; }
+    .q-num { display: block; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--pink-deep); }
+    .q-card h2 { font-family: var(--serif); font-size: 26px; margin: 4px 0 0; color: var(--dark); line-height: 1.1; }
+    .q-desc { margin: 0; color: var(--dmuted); font-size: 14px; }
+    .q-opts { display: grid; gap: 8px; }
+    .q-opt {
+      display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: var(--r-sm);
+      border: 1px solid var(--dline); background: var(--paper); cursor: pointer; font-size: 14px;
+    }
+    .q-opt input { width: 20px; height: 20px; margin-top: 4px; flex: none; accent-color: var(--pink-deep); }
+    .q-fields { display: grid; gap: 12px; }
+    @media (min-width: 700px) { .q-fields.cols-2 { grid-template-columns: 1fr 1fr; } }
+    .q-field { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--dark); }
+    .q-field input, .q-field textarea, .q-field select {
+      min-height: 44px; border-radius: var(--r-sm); border: 1.5px solid var(--ink-border);
+      padding: 8px 12px; font: inherit; background: var(--white); color: var(--dark); width: 100%;
+    }
+    .q-field textarea { min-height: 80px; resize: vertical; }
+    .q-foot { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--dline); }
+    .q-save {
+      min-height: 44px; padding: 0 16px; border-radius: var(--r-pill);
+      background: var(--dark); color: var(--cream); font-weight: 700; font-size: 13px; cursor: pointer;
+    }
+    .q-status { font-size: 13px; color: var(--pink-deep); font-weight: 600; }
+    .hours-grid { display: grid; gap: 8px; }
+    @media (min-width: 640px) { .hours-grid { grid-template-columns: 1fr 1fr; } }
+    .upload-grid { display: grid; gap: 12px; }
+    @media (min-width: 640px) { .upload-grid { grid-template-columns: 1fr 1fr; } }
+    .upload-slot { border: 1px dashed var(--pink-deep); border-radius: var(--r-md); padding: 12px; background: var(--paper); display: grid; gap: 8px; }
+    .upload-slot input[type="file"] { font-size: 13px; }
+    .upload-prev { display: flex; gap: 8px; align-items: center; }
+    .upload-prev img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--r-xs); }
+    .upload-prev a { color: var(--pink-deep); font-size: 13px; font-weight: 600; }
+  </style>
+</head>
 <body>
-<div class="bar"><span>Faith’s site preview · decisions</span><a href="index.html">Back to the site</a></div>
-<main>
-<h1>Decisions for Faith</h1>
-<p class="lead">Everything that still needs your answer, in one place. The site itself already shows the most likely choice for each one. Tell LaVante or Pam what to change.</p>
+  <header class="dec-bar">
+    <a href="index.html" class="logo" data-logo-slot="header" aria-label="Loc'd In with Faith — Home"></a>
+    <div class="dec-bar-actions">
+      <span class="dec-count" id="dec-progress">0 / 16 answered</span>
+      <button type="button" class="dec-btn dec-btn-pink" id="dec-save-all">Save all answers</button>
+      <a class="dec-btn dec-btn-ghost" href="index.html">Back to site</a>
+    </div>
+  </header>
 
-<h2>Menu &amp; services</h2>
-<ol>
-<li><b>All 3 · $85</b>It is on your Instagram menu but not on GlossGenius. Still offered? The site shows about 2 hr 15 min and a $20 deposit.</li>
-<li><b>Detox +$20 and Attachment +$10</b>These are on GlossGenius but not on your Instagram menu. Keep both?</li>
-<li><b>Mobile visits</b>OK for clients to book mobile visits online, with the +$20 / +$35 travel fee added automatically?</li>
-<li><b>Reattachment preparation</b>Is Preparation (+$100, +2 hr) required or optional? What prep steps should clients follow before a reattachment?</li>
-</ol>
+  <main class="dec-main">
+    <section class="dec-hero">
+      <div class="dec-hero-copy">
+        <div class="eyebrow" style="color:var(--pink-chrome)">One-pager &amp; interactive decisions</div>
+        <h1>Decisions for Faith</h1>
+        <p>Your site summary and every open choice in one place. Pick your logo, hours, wording, and upload any service photos below — your answers save straight to the studio database so LaVante and Pam can see them.</p>
+        <div class="dec-hero-actions">
+          <a class="dec-btn dec-btn-pink cta" href="#q-list">Start reviewing choices</a>
+          <a class="dec-btn dec-btn-ghost" href="index.html">Preview live site</a>
+        </div>
+      </div>
+      <div class="dec-hero-card">
+        <img src="assets/portrait.webp?v=r3-20261120" width="420" height="560" fetchpriority="high" style="object-position:50% 15%" alt="Faith Cordero, PHX Loctician">
+        <b>Loc’d In with Faith · Central Phoenix Decision Sheet</b>
+      </div>
+    </section>
 
-<h2>Hours &amp; booking</h2>
-<ol>
-<li><b>Your hours</b>Instagram says Mon–Fri 10 AM–12 AM. GlossGenius says 8 AM–11:30 PM (Tuesday 11 PM). Which is right, and do you take weekends?</li>
-<li><b>Which calendar</b>Keep GlossGenius as your calendar (the site links to it), or let the site take bookings onto your Google Calendar? The openings shown in booking are examples until this is connected.</li>
-<li><b>Booking rules</b>How far ahead can clients book? Is there a grace period for late arrivals? Can clients bring guests or kids?</li>
-</ol>
+    <div class="dec-status-banner" id="dec-global-status" role="status">Connecting to studio database…</div>
 
-<h2>Policies &amp; payments</h2>
-<ol>
-<li><b>Cancellation wording</b>The site uses your Instagram rule: deposits can be refunded with 24 hours’ notice. GlossGenius shows “notify us as soon as possible”, $0 fee. Which one stays?</li>
-<li><b>Paying the balance</b>Keep Venmo, PayPal, Apple Pay and Zelle for the balance, or take everything through Stripe?</li>
-<li><b>Connect your payments</b>Deposits run in Stripe test mode until you connect your own free Stripe account. Steps are in your studio page under “Connect your payments”. Money goes straight to your bank; Stripe’s normal fee is 2.9% + 30¢ per card payment.</li>
-</ol>
+    <section class="onepager" aria-labelledby="onepager-h">
+      <h2 id="onepager-h">Your Site at a Glance (One-Pager)</h2>
+      <div class="op-grid">
+        <div class="op-box">
+          <h3>Summary &amp; What’s Built</h3>
+          <ul>
+            <li><b>Preview link:</b> locdinwithfaith.oilgateai.com</li>
+            <li><b>Booking &amp; menu:</b> Retwist + Style, All 3, Flyer Reattachment tiers, Treatments, and Mobile drive-time/fee estimator.</li>
+            <li><b>Location privacy:</b> Public site says “Central Phoenix” only. Exact studio address &amp; map directions send after booking.</li>
+            <li><b>Social-first gallery &amp; reels:</b> Drives visitors straight to @locd.inwithfaith and @faith.cordero22.</li>
+            <li><b>Client account &amp; Admin:</b> Free email-code sign-in, client consultation photo uploads, 24 logo options, and live photo/payment management.</li>
+          </ul>
+        </div>
+        <div class="op-box">
+          <h3>Monthly Cost &amp; Support</h3>
+          <ul>
+            <li><b>Website build:</b> Free to start.</li>
+            <li><b>Ongoing support:</b> Proposed trade of services (details agreed together).</li>
+            <li><b>Hosting, calendar &amp; email sign-in:</b> $0/month (GitHub Pages + Google Calendar + Supabase free email OTP).</li>
+            <li><b>Stripe deposits ($20 / $50):</b> $0/month, goes straight to your bank (Stripe’s standard 2.9% + 30¢ per card payment).</li>
+            <li><b>Optional texts (if you turn them on):</b> ~$4/month (Telnyx toll-free + carrier fees). Off until you say yes below.</li>
+          </ul>
+        </div>
+        <div class="op-box">
+          <h3>What We Need From You</h3>
+          <ol>
+            <li>Pick your favorite logo style from the 24 options below.</li>
+            <li>Confirm your hours, menu items, and reattachment pricing.</li>
+            <li>Choose Bible verse vs. sales line and free email vs. paid SMS sign-in.</li>
+            <li>Upload fresh photos for any missing services and link your free Stripe account.</li>
+          </ol>
+        </div>
+        <div class="op-box">
+          <h3>Next Steps</h3>
+          <ol>
+            <li>Click through the 16 choices below and hit <b>Save all answers</b>.</li>
+            <li>We review your saved answers in Admin and lock in any updates.</li>
+            <li>We test Stripe alongside GlossGenius so no client is ever charged twice, then go live in your name.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
 
-<h2>Texts &amp; email</h2>
-<ol>
-<li><b>Reminder schedule</b>Suggested: confirm 72 hours before, remind 24 hours before, rebook at 6 weeks, nudge at 8 weeks. OK?</li>
-<li><b>Texting number</b>Your (480) number or a new business number? Registering texts needs either an EIN or sole-proprietor details.</li>
-<li><b>Email sender</b>Which domain should emails come from, and what postal address goes in the footer (a PO box is fine)?</li>
-</ol>
+    <section class="q-list" id="q-list" aria-label="Interactive decisions">
+      <!-- Q1: 24-Logo Picker -->
+      <article class="q-card" data-q="brand_logo">
+        <div class="q-head"><div><span class="q-num">Decision 01</span><h2>Pick your header logo (24 flyer-inspired options)</h2></div><span class="q-status" id="dec-logo-picked">Default selected</span></div>
+        <p class="q-desc">Built from your glossy pink-on-black flyer style with white &amp; pink script. Tap any option to preview it live in the top bar right now.</p>
+        <div class="logo-picker-grid" id="dec-logo-grid"></div>
+        <label class="q-field">Want any tweak to your favorite logo?
+          <input type="text" data-field="logo_note" placeholder="Optional note (e.g., make script bigger, try option #3 without sparkles)">
+        </label>
+        <div class="q-foot"><span class="q-status">Auto-saves on click</span><button type="button" class="q-save" data-save-q>Save logo choice</button></div>
+      </article>
 
-<h2>Photos &amp; personal details</h2>
-<ol>
-<li><b>Instagram photos</b>OK to use your reel covers and photos on the site? Full-size originals would look sharper. You can swap any photo yourself from the studio page.</li>
-<li><b>Bible verse</b>Isaiah 43:1 from your personal bio appears on the home and about pages. Keep it?</li>
-<li><b>Studio address</b>The site only says “Central Phoenix” and sends the exact address after a deposit. OK?</li>
-<li><b>Client account page</b>It shows an example client so you can see the layout. Real client accounts start when booking is connected.</li>
-</ol>
+      <!-- Q2: Bible Verse vs Sales Line -->
+      <article class="q-card" data-q="verse_vs_sales">
+        <div class="q-head"><div><span class="q-num">Decision 02</span><h2>Bible verse vs. a sales-focused line</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Right now Isaiah 43:1 appears in the Meet Faith and About sections. Keep the verse or switch to a booking-focused headline?</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="verse_mode" data-field="mode" value="verse" checked><span><b>Keep Isaiah 43:1</b> — “I have called thee by thy name; thou art mine.”</span></label>
+          <label class="q-opt"><input type="radio" name="verse_mode" data-field="mode" value="sales"><span><b>Switch to a sales-focused line</b> (type or pick your line below)</span></label>
+        </div>
+        <label class="q-field">Sales-focused line (used if you pick sales mode)
+          <input type="text" data-field="sales_line" value="Fresh parts, clean retwists &amp; mobile studio service across Central Phoenix — book your chair or home visit in under a minute.">
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save wording choice</button></div>
+      </article>
 
-<h2>Support</h2>
-<ol><li><b>Ongoing support</b>The website build is free to start. We propose a trade of services for ongoing support, with details to agree together.</li></ol>
-</main>
-</body></html>
+      <!-- Q3: Sign-in method -->
+      <article class="q-card" data-q="signin_method">
+        <div class="q-head"><div><span class="q-num">Decision 03</span><h2>Client sign-in: Free email code vs. phone text code</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Email 6-digit codes are free. Phone text-code sign-in costs per text, so it stays off until you decide you want it.</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="signin_mode" data-field="method" value="email_only" checked><span><b>Free email code only (Default — $0)</b> — clients enter their email, get a 6-digit code, and upload photos.</span></label>
+          <label class="q-opt"><input type="radio" name="signin_mode" data-field="method" value="email_and_sms"><span><b>Turn on phone text-code sign-in too</b> — adds SMS login (~$0.01+ per text + carrier fee).</span></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save sign-in choice</button></div>
+      </article>
+
+      <!-- Q4: Hours -->
+      <article class="q-card" data-q="studio_hours">
+        <div class="q-head"><div><span class="q-num">Decision 04</span><h2>Studio hours &amp; weekends</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Your GlossGenius currently shows 8 AM–11:30 PM (and Tuesday 11 PM–11:30 PM), while Instagram says Mon–Fri 10 AM–12 AM. Edit each day below or load a preset.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="q-save" data-hours-preset="gg">Load current GlossGenius hours</button>
+          <button type="button" class="q-save" data-hours-preset="ig">Load IG Mon–Fri 10 AM–12 AM</button>
+        </div>
+        <div class="hours-grid">
+          <label class="q-field">Monday<input type="text" data-field="hours_mon" value="8 AM - 11:30 PM"></label>
+          <label class="q-field">Tuesday (GlossGenius says 11 PM–11:30 PM)<input type="text" data-field="hours_tue" value="11 PM - 11:30 PM"></label>
+          <label class="q-field">Wednesday<input type="text" data-field="hours_wed" value="8 AM - 11:30 PM"></label>
+          <label class="q-field">Thursday<input type="text" data-field="hours_thu" value="8 AM - 11:45 PM"></label>
+          <label class="q-field">Friday<input type="text" data-field="hours_fri" value="8 AM - 11:30 PM"></label>
+          <label class="q-field">Saturday<input type="text" data-field="hours_sat" value="8 AM - 11:30 PM"></label>
+          <label class="q-field">Sunday<input type="text" data-field="hours_sun" value="8 AM - 11:30 PM"></label>
+          <label class="q-field">Public location display<input type="text" data-field="hours_note" value="Central Phoenix · By appointment"></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save hours</button></div>
+      </article>
+
+      <!-- Q5: Payments connection -->
+      <article class="q-card" data-q="payments_stripe">
+        <div class="q-head"><div><span class="q-num">Decision 05</span><h2>Stripe deposit connection &amp; remaining balance</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Create a free Stripe account at dashboard.stripe.com/register and make two Payment Links ($20 and $50) redirecting back to <code>https://locdinwithfaith.oilgateai.com/?paid=1#book</code>.</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="checkbox" data-field="stripe_account_ready"><span>I created/signed in to my Stripe account and connected my bank for payouts</span></label>
+        </div>
+        <div class="q-fields cols-2">
+          <label class="q-field">$20 Deposit Payment Link URL<input type="url" data-field="pay_link_20" placeholder="https://buy.stripe.com/..."></label>
+          <label class="q-field">$50 Deposit Payment Link URL<input type="url" data-field="pay_link_50" placeholder="https://buy.stripe.com/..."></label>
+        </div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="checkbox" data-field="balance_methods" data-group="balance_methods" value="Venmo" checked><span>Keep Venmo for remaining balance</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="balance_methods" data-group="balance_methods" value="PayPal" checked><span>Keep PayPal for remaining balance</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="balance_methods" data-group="balance_methods" value="Apple Pay" checked><span>Keep Apple Pay for remaining balance</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="balance_methods" data-group="balance_methods" value="Zelle" checked><span>Keep Zelle (480) 806-7675 for remaining balance</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="balance_methods" data-group="balance_methods" value="Stripe card"><span>Take remaining balance through Stripe too</span></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save payment answers</button></div>
+      </article>
+
+      <!-- Q6: Reattachment pricing & prep -->
+      <article class="q-card" data-q="reattach_pricing">
+        <div class="q-head"><div><span class="q-num">Decision 06</span><h2>Reattachment full-head price &amp; prep rule</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Your new flyer lists Full-Head Reattachment starting at $250 (Wash Included), while GlossGenius currently shows $300.</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="reattach_full" data-field="full_head_price" value="250" checked><span><b>Use Flyer pricing: Full head starting at $250 (Wash Included)</b></span></label>
+          <label class="q-opt"><input type="radio" name="reattach_full" data-field="full_head_price" value="300"><span><b>Use GlossGenius pricing: $300</b></span></label>
+        </div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="prep_rule" data-field="prep_required" value="optional" checked><span>Preparation (+$100, +2 hr) is optional if locs aren't prepped</span></label>
+          <label class="q-opt"><input type="radio" name="prep_rule" data-field="prep_required" value="required"><span>Preparation (+$100, +2 hr) is required for unprepped locs</span></label>
+        </div>
+        <label class="q-field">Prep steps clients should follow before a reattachment
+          <textarea data-field="prep_steps" placeholder="e.g., Wash &amp; dry hair cleanly, bring loose locs counted and ready, send 3 clear photos before booking."></textarea>
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save reattachment rules</button></div>
+      </article>
+
+      <!-- Q7: Menu & Treatments -->
+      <article class="q-card" data-q="menu_services">
+        <div class="q-head"><div><span class="q-num">Decision 07</span><h2>Menu items &amp; GlossGenius treatments</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="checkbox" data-field="active_items" data-group="active_items" value="All 3 ($85)" checked><span>Keep <b>All 3 · $85</b> (Shampoo &amp; Wash, Retwist, Style, Hot Towel Facial)</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="active_items" data-group="active_items" value="Detox (+$20)" checked><span>Keep <b>Detox · +$20</b></span></label>
+          <label class="q-opt"><input type="checkbox" data-field="active_items" data-group="active_items" value="Attachment (+$10)" checked><span>Keep <b>Attachment · +$10</b></span></label>
+          <label class="q-opt"><input type="checkbox" data-field="active_items" data-group="active_items" value="Treatments ($30/$55/$70)" checked><span>Keep <b>Treatments</b> (Hot oil $30 · Facial/scalp massage $55 · Deep conditioning $70)</span></label>
+        </div>
+        <label class="q-field">Any service price or duration changes?
+          <input type="text" data-field="menu_notes" placeholder="Optional notes on prices or add-ons">
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save menu choices</button></div>
+      </article>
+
+      <!-- Q8: Mobile Visits -->
+      <article class="q-card" data-q="mobile_visits">
+        <div class="q-head"><div><span class="q-num">Decision 08</span><h2>Mobile visits &amp; travel radius</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="mob_allow" data-field="allow_mobile" value="yes" checked><span>Allow clients to book mobile visits online (+$20 under 30 min / +$35 over 30 min)</span></label>
+          <label class="q-opt"><input type="radio" name="mob_allow" data-field="allow_mobile" value="request_only"><span>Keep mobile visits by request / DM only</span></label>
+        </div>
+        <label class="q-field">Maximum drive distance or Phoenix areas you cover
+          <input type="text" data-field="max_distance" placeholder="e.g., Up to 45 minutes across Phoenix metro">
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save travel choice</button></div>
+      </article>
+
+      <!-- Q9: Calendar & Booking Rules -->
+      <article class="q-card" data-q="booking_calendar">
+        <div class="q-head"><div><span class="q-num">Decision 09</span><h2>Booking calendar &amp; studio rules</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="cal_mode" data-field="calendar_provider" value="glossgenius" checked><span>Keep GlossGenius as my live calendar (site links out &amp; keeps everything synced)</span></label>
+          <label class="q-opt"><input type="radio" name="cal_mode" data-field="calendar_provider" value="google_calendar"><span>Connect this site straight to my Google Calendar</span></label>
+        </div>
+        <div class="q-fields cols-2">
+          <label class="q-field">How far ahead can clients book?<input type="text" data-field="advance_window" placeholder="e.g., Up to 60 days ahead"></label>
+          <label class="q-field">Late arrival grace period<input type="text" data-field="grace_period" placeholder="e.g., 15 minutes"></label>
+        </div>
+        <label class="q-field">Guests or kids policy<input type="text" data-field="guests_policy" placeholder="e.g., No extra guests unless approved"></label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save calendar &amp; rules</button></div>
+      </article>
+
+      <!-- Q10: Cancellation Policy -->
+      <article class="q-card" data-q="cancellation_policy">
+        <div class="q-head"><div><span class="q-num">Decision 10</span><h2>Cancellation policy wording</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Your Instagram menu says deposits refund with 24+ hrs notice, while GlossGenius lists a 25% cancellation fee.</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="cancel_ver" data-field="policy_choice" value="24hr_refund" checked><span>Keep IG wording: Deposits refund if cancelled or rescheduled 24+ hrs ahead</span></label>
+          <label class="q-opt"><input type="radio" name="cancel_ver" data-field="policy_choice" value="25pct_fee"><span>Match GlossGenius: 25% cancellation fee + notify ASAP to reschedule</span></label>
+          <label class="q-opt"><input type="radio" name="cancel_ver" data-field="policy_choice" value="custom"><span>Use custom wording below</span></label>
+        </div>
+        <label class="q-field">Custom cancellation wording (optional)
+          <textarea data-field="custom_policy" placeholder="Write exact cancellation wording if choosing custom"></textarea>
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save policy choice</button></div>
+      </article>
+
+      <!-- Q11: Address Privacy -->
+      <article class="q-card" data-q="studio_privacy">
+        <div class="q-head"><div><span class="q-num">Decision 11</span><h2>Studio address privacy</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="addr_priv" data-field="visibility" value="after_deposit" checked><span>Keep “Central Phoenix” public and send exact address + map directions only after booking (Recommended)</span></label>
+          <label class="q-opt"><input type="radio" name="addr_priv" data-field="visibility" value="public"><span>Show my studio address publicly on the website too</span></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save privacy choice</button></div>
+      </article>
+
+      <!-- Q12: Reminder Texts & Number -->
+      <article class="q-card" data-q="reminder_texts">
+        <div class="q-head"><div><span class="q-num">Decision 12</span><h2>Appointment text schedule &amp; texting number</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="checkbox" data-field="cadence" data-group="cadence" value="72h confirm" checked><span>72-hour confirmation check-in</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="cadence" data-group="cadence" value="24h reminder" checked><span>24-hour appointment reminder</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="cadence" data-group="cadence" value="6wk rebook" checked><span>6-week rebook message</span></label>
+          <label class="q-opt"><input type="checkbox" data-field="cadence" data-group="cadence" value="8wk nudge" checked><span>8-week gentle nudge</span></label>
+        </div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="sms_num" data-field="number_choice" value="existing_480" checked><span>Keep using (480) 806-7675 / GlossGenius texts for now ($0 extra)</span></label>
+          <label class="q-opt"><input type="radio" name="sms_num" data-field="number_choice" value="new_telnyx"><span>Set up a dedicated ~$4/mo business texting number (needs sole-prop or EIN details)</span></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save text preferences</button></div>
+      </article>
+
+      <!-- Q13: Email Sender & Postal -->
+      <article class="q-card" data-q="email_setup">
+        <div class="q-head"><div><span class="q-num">Decision 13</span><h2>Email sender &amp; footer mailing address</h2></div><span class="q-status"></span></div>
+        <div class="q-fields cols-2">
+          <label class="q-field">Email address for campaigns &amp; replies<input type="email" data-field="sender_email" placeholder="hello@locdinwithfaith.com"></label>
+          <label class="q-field">Postal address or PO Box for email footer (CAN-SPAM)<input type="text" data-field="postal_address" placeholder="e.g., PO Box 1234, Phoenix, AZ"></label>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save email setup</button></div>
+      </article>
+
+      <!-- Q14: Photos & File Uploads -->
+      <article class="q-card" data-q="photos_upload">
+        <div class="q-head"><div><span class="q-num">Decision 14</span><h2>Service photos &amp; original uploads</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Upload crisp photos straight from your phone below so every service card and gallery tile shows your exact work (especially Treatments and All 3).</p>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="ig_perm" data-field="ig_permission" value="yes_use_ig" checked><span>OK to keep my Instagram reel/post photos on the site until I upload full-size originals</span></label>
+          <label class="q-opt"><input type="radio" name="ig_perm" data-field="ig_permission" value="replace_all"><span>I’ll upload fresh originals here and in Admin</span></label>
+        </div>
+        <div class="upload-grid">
+          <div class="upload-slot"><label for="up-all3"><b>All 3 (Wash + Retwist + Style + Facial)</b></label><input id="up-all3" type="file" accept="image/*" data-upload-slot="svc-all3"><div class="upload-prev" data-upload-preview="svc-all3"></div></div>
+          <div class="upload-slot"><label for="up-treatments"><b>Treatments (Hot oil / Scalp massage / Deep cond.)</b></label><input id="up-treatments" type="file" accept="image/*" data-upload-slot="svc-treatments"><div class="upload-prev" data-upload-preview="svc-treatments"></div></div>
+          <div class="upload-slot"><label for="up-reattach"><b>Reattachments (Before &amp; After)</b></label><input id="up-reattach" type="file" accept="image/*" data-upload-slot="svc-reattach"><div class="upload-prev" data-upload-preview="svc-reattach"></div></div>
+          <div class="upload-slot"><label for="up-mobile"><b>Faith portrait / Mobile visit</b></label><input id="up-mobile" type="file" accept="image/*" data-upload-slot="svc-mobile"><div class="upload-prev" data-upload-preview="svc-mobile"></div></div>
+        </div>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save photo settings</button></div>
+      </article>
+
+      <!-- Q15: Social Handles & Links -->
+      <article class="q-card" data-q="social_handles">
+        <div class="q-head"><div><span class="q-num">Decision 15</span><h2>Social handles &amp; TikTok / IG links</h2></div><span class="q-status"></span></div>
+        <p class="q-desc">Right now behind-the-chair reels link to @locd.inwithfaith and personal tiles link to @faith.cordero22. Paste your TikTok handle or exact favorite post URLs to feature.</p>
+        <div class="q-fields cols-2">
+          <label class="q-field">TikTok handle or URL<input type="text" data-field="tiktok_url" placeholder="https://www.tiktok.com/@..."></label>
+          <label class="q-field">Primary account for booking questions<select data-field="primary_social"><option value="@locd.inwithfaith">@locd.inwithfaith (Business)</option><option value="@faith.cordero22">@faith.cordero22 (Personal)</option><option value="Both">Both accounts</option></select></label>
+        </div>
+        <label class="q-field">Exact IG / TikTok post URLs you want featured in Gallery &amp; Reels
+          <textarea data-field="featured_post_urls" placeholder="Paste any exact Instagram /reel/ or TikTok /video/ URLs you want pinned first"></textarea>
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save social settings</button></div>
+      </article>
+
+      <!-- Q16: Ongoing Support & Final Notes -->
+      <article class="q-card" data-q="support_notes">
+        <div class="q-head"><div><span class="q-num">Decision 16</span><h2>Ongoing support &amp; anything else</h2></div><span class="q-status"></span></div>
+        <div class="q-opts">
+          <label class="q-opt"><input type="radio" name="sup_plan" data-field="support_choice" value="trade_of_services" checked><span>Trade of services for ongoing updates &amp; support (details agreed together)</span></label>
+          <label class="q-opt"><input type="radio" name="sup_plan" data-field="support_choice" value="discuss_later"><span>Let’s talk through options once the preview feels 100% right</span></label>
+        </div>
+        <label class="q-field">Anything else you want changed on the site?
+          <textarea data-field="extra_notes" placeholder="Drop any feedback, color tweaks, or questions for LaVante &amp; Pam"></textarea>
+        </label>
+        <div class="q-foot"><span class="q-status"></span><button type="button" class="q-save" data-save-q>Save final notes</button></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="assets/logos.js?v=r3-20261120"></script>
+  <script src="assets/backend-config.js?v=r3-20261120"></script>
+  <script src="assets/decisions.js?v=r3-20261120"></script>
+</body>
+</html>

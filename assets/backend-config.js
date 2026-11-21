@@ -1,3 +1,5 @@
-// Faith's studio database (Supabase). Public values only: the project URL and its publishable key.
-// Empty until the project exists; the admin then shows "Saving is off" and checkout stays in Stripe test mode.
-window.FAITH_BACKEND = { url: '', key: '' };
+// Faith's studio database (Supabase). Public values only: project URL and publishable key.
+window.FAITH_BACKEND = {
+  url: 'https://ibialnlmhcdinleajkud.supabase.co',
+  key: 'sb_publishable_Uu6KTW2t7ptj-xUihW2YnQ_PpdlOSzF'
+};

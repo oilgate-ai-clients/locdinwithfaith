@@ -9,20 +9,31 @@ const dialog = document.querySelector('#device-dialog');
 const frame = document.querySelector('#device-frame');
 const model = document.querySelector('#device-model');
 function resizePhone() {
-  if (!dialog.open) return;
+  if (!dialog || !dialog.open) return;
   const [width, height] = model.value.split(',').map(Number);
   const scale = Math.min(1, (innerWidth - 40) / width, (innerHeight - 92) / height);
   Object.assign(frame.style, { width: width + 'px', height: height + 'px', transform: 'scale(' + scale + ')' });
   Object.assign(frame.parentElement.style, { width: width * scale + 'px', height: height * scale + 'px' });
 }
-document.querySelector('#device-open').addEventListener('click', () => {
-  frame.src = location.pathname + location.hash;
-  dialog.showModal();
-  resizePhone();
+const openBtn = document.querySelector('#device-open');
+if (openBtn && dialog) {
+  openBtn.addEventListener('click', e => {
+    e.preventDefault();
+    frame.src = location.pathname + location.hash;
+    dialog.showModal();
+    resizePhone();
+  });
+  dialog.addEventListener('close', () => frame.removeAttribute('src'));
+  model.addEventListener('change', resizePhone);
+  window.addEventListener('resize', resizePhone);
+}
+
+// Handle tile fallback cleanly if an external tile fails to load
+document.querySelectorAll('.area-map .map-tiles img').forEach(img => {
+  img.addEventListener('error', () => {
+    img.style.opacity = '0';
+  });
 });
-dialog.addEventListener('close', () => frame.removeAttribute('src'));
-model.addEventListener('change', resizePhone);
-window.addEventListener('resize', resizePhone);
 
 // Travel estimate: drive time from the centre of Faith's public service circle (central Phoenix), never her home.
 const CENTER = '-112.074,33.47';
@@ -81,19 +92,21 @@ function loadScript(src) {
     document.head.append(script);
   });
 }
-// The GA4 tag itself is in each page's <head>; this records one page view per screen of the one-page site.
+
+// GA4 screen tracking
 if (!framed && typeof window.gtag === 'function') {
   const trackPage = () => {
     const section = document.querySelector('.screen.on');
-    if (!section || ['admin','texts','email'].includes(section.id)) return;
-    window.gtag('event', 'page_view', {page_location: location.origin + location.pathname + '#' + section.id, page_title: section.id});
+    if (!section || ['admin', 'texts', 'email'].includes(section.id)) return;
+    window.gtag('event', 'page_view', { page_location: location.origin + location.pathname + '#' + section.id, page_title: section.id });
   };
   trackPage();
   window.addEventListener('hashchange', trackPage);
 }
+
 const loadReport = document.querySelector('#ga-load');
 const reportStatus = document.querySelector('#ga-status');
-if (/^\d+$/.test(analytics.propertyId) && analytics.clientId.endsWith('.apps.googleusercontent.com')) {
+if (loadReport && /^\d+$/.test(analytics.propertyId) && analytics.clientId.endsWith('.apps.googleusercontent.com')) {
   loadReport.hidden = false;
   reportStatus.textContent = 'Sign in with a Google account that has access to the studio property.';
   let client;
@@ -102,31 +115,43 @@ if (/^\d+$/.test(analytics.propertyId) && analytics.clientId.endsWith('.apps.goo
     try {
       if (!window.google?.accounts?.oauth2) await loadScript('https://accounts.google.com/gsi/client');
       client ??= google.accounts.oauth2.initTokenClient({
-        client_id: analytics.clientId, scope: 'https://www.googleapis.com/auth/analytics.readonly',
+        client_id: analytics.clientId,
+        scope: 'https://www.googleapis.com/auth/analytics.readonly',
         error_callback: () => { loadReport.disabled = false; reportStatus.textContent = 'Sign-in closed. You can try again.'; },
         callback: async auth => {
           try {
             if (!auth.access_token) throw Error();
-            const metrics = ['activeUsers','sessions','screenPageViews'];
+            const metrics = ['activeUsers', 'sessions', 'screenPageViews'];
             const res = await fetch('https://analyticsdata.googleapis.com/v1beta/properties/' + analytics.propertyId + ':runReport', {
-              method: 'POST', headers: {Authorization: 'Bearer ' + auth.access_token, 'Content-Type':'application/json'},
-              body: JSON.stringify({dateRanges:[{startDate:'29daysAgo',endDate:'today'}], metrics:metrics.map(name => ({name}))})
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + auth.access_token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ dateRanges: [{ startDate: '29daysAgo', endDate: 'today' }], metrics: metrics.map(name => ({ name })) })
             });
             if (!res.ok) throw Error();
             const data = await res.json();
             const results = document.querySelector('#ga-results');
             results.replaceChildren();
             const values = data.rows?.[0]?.metricValues;
-            if (values) ['Active users','Sessions','Page views'].forEach((label,i) => {
+            if (values) ['Active users', 'Sessions', 'Page views'].forEach((label, i) => {
               const term = document.createElement('dt'), value = document.createElement('dd');
-              term.textContent = label; value.textContent = values[i].value; results.append(term,value);
+              term.textContent = label; value.textContent = values[i].value; results.append(term, value);
             });
             reportStatus.textContent = values ? 'Google Analytics · updated just now.' : 'Google Analytics returned no activity for this period.';
-          } catch { document.querySelector('#ga-results').replaceChildren(); reportStatus.textContent = 'Report unavailable. Check property access and the Analytics Data API.'; }
-          finally { loadReport.disabled = false; }
+          } catch {
+            document.querySelector('#ga-results').replaceChildren();
+            reportStatus.textContent = 'Report unavailable. Check property access and the Analytics Data API.';
+          } finally {
+            loadReport.disabled = false;
+          }
         }
       });
       client.requestAccessToken();
-    } catch { loadReport.disabled = false; reportStatus.textContent = 'Google sign-in unavailable. Try again.'; }
+    } catch {
+      loadReport.disabled = false;
+      reportStatus.textContent = 'Google sign-in unavailable. Try again.';
+    }
   };
 }
+
+// Load Central Phoenix street map tiles cleanly when map enters viewport or on interaction
+(function(){const maps=[...document.querySelectorAll('.area-map')];if(!maps.length)return;const show=()=>maps.forEach(m=>m.classList.add('map-live'));if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){show();io.disconnect();}},{rootMargin:'600px 0px'});maps.forEach(m=>io.observe(m));}else{show();}window.addEventListener('hashchange',()=>{if(location.hash==='#book')show();});['pointerdown','scroll'].forEach(ev=>window.addEventListener(ev,show,{once:true,passive:true}));})();
