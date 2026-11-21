@@ -1,7 +1,7 @@
 'use strict';
 
 // Public identifiers issued to the studio. OAuth credentials stay in Google's sign-in flow.
-const analytics = { measurementId: '', propertyId: '', clientId: '' };
+const analytics = { measurementId: 'G-5M1NB9P5ZH', propertyId: '', clientId: '' };
 const framed = window.self !== window.top;
 document.documentElement.classList.toggle('framed', framed);
 
@@ -24,46 +24,51 @@ dialog.addEventListener('close', () => frame.removeAttribute('src'));
 model.addEventListener('change', resizePhone);
 window.addEventListener('resize', resizePhone);
 
-const address = document.querySelector('#field-0');
-const estimate = document.querySelector('#estimate-drive');
-const statusLine = document.querySelector('#drive-result');
-let pending;
-address.addEventListener('input', () => {
-  pending?.abort();
-  statusLine.textContent = '';
-  estimate.disabled = false;
-});
-estimate.addEventListener('click', async () => {
-  const query = address.value.trim();
-  if (!query) { statusLine.textContent = 'Enter your street address and city.'; address.focus(); return; }
-  pending?.abort();
-  const request = new AbortController();
-  pending = request;
-  const timeout = setTimeout(() => request.abort(), 15000);
-  estimate.disabled = true;
-  statusLine.textContent = 'Looking up the drive from central Phoenix…';
-  try {
-    const params = new URLSearchParams({ q: query, limit: '1', bbox: '-113,33,-111,34' });
-    const geo = await fetch('https://photon.komoot.io/api/?' + params, { signal: request.signal });
-    if (!geo.ok) throw Error();
-    const [place] = (await geo.json()).features;
-    if (!place?.properties?.housenumber || !place.geometry?.coordinates) { statusLine.textContent = 'No Phoenix-area match. Check the address and city.'; return; }
-    // Central Phoenix reference point, shared by all customers.
-    const path = '-112.074,33.47;' + place.geometry.coordinates.slice(0, 2).map(Number).join(',');
-    const route = await fetch('https://router.project-osrm.org/route/v1/driving/' + path + '?overview=false', { signal: request.signal });
-    if (!route.ok) throw Error();
-    const seconds = (await route.json()).routes?.[0]?.duration;
-    if (!Number.isFinite(seconds)) throw Error();
-    const minutes = Math.max(1, Math.round(seconds / 60));
-    if (minutes === 30) { statusLine.textContent = 'About 30 minutes. Confirm the fee with Faith at the 30-minute boundary.'; return; }
-    document.querySelector('[data-loc="' + (minutes < 30 ? 'm30' : 'm31') + '"]').click();
-    statusLine.textContent = 'About ' + minutes + (minutes === 1 ? ' minute' : ' minutes') + ' from central Phoenix. Estimated travel fee $' + (minutes < 30 ? 20 : 35) + '. Based on OpenStreetMap and OSRM, without live traffic.';
-  } catch {
-    if (address.value.trim() === query) statusLine.textContent = 'Drive estimate unavailable. Check the address or try again.';
-  } finally {
-    clearTimeout(timeout);
-    if (pending === request) estimate.disabled = false;
-  }
+// Travel estimate: drive time from the centre of Faith's public service circle (central Phoenix), never her home.
+const CENTER = '-112.074,33.47';
+document.querySelectorAll('[data-travel] form').forEach(form => {
+  const input = form.querySelector('[data-addr]');
+  const out = form.querySelector('[data-out]');
+  const button = form.querySelector('[data-estimate]');
+  const book = form.querySelector('[data-travel-book]');
+  let pending;
+  input.addEventListener('input', () => { pending?.abort(); out.textContent = ''; button.disabled = false; });
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const query = input.value.trim();
+    if (!query) { out.textContent = 'Type your street address and city first.'; input.focus(); return; }
+    pending?.abort();
+    const request = new AbortController();
+    pending = request;
+    const timeout = setTimeout(() => request.abort(), 15000);
+    button.disabled = true;
+    out.textContent = 'Checking the drive…';
+    try {
+      const params = new URLSearchParams({ q: query, limit: '1', bbox: '-113,33,-111,34' });
+      const geo = await fetch('https://photon.komoot.io/api/?' + params, { signal: request.signal });
+      if (!geo.ok) throw Error();
+      const [place] = (await geo.json()).features;
+      if (!place?.geometry?.coordinates) { out.textContent = 'No Phoenix-area match. Check the street and city.'; return; }
+      const path = CENTER + ';' + place.geometry.coordinates.slice(0, 2).map(Number).join(',');
+      const route = await fetch('https://router.project-osrm.org/route/v1/driving/' + path + '?overview=false', { signal: request.signal });
+      if (!route.ok) throw Error();
+      const seconds = (await route.json()).routes?.[0]?.duration;
+      if (!Number.isFinite(seconds)) throw Error();
+      const minutes = Math.max(1, Math.round(seconds / 60));
+      const near = minutes < 30;
+      document.querySelector('[data-loc="' + (near ? 'm30' : 'm31') + '"]')?.click();
+      out.innerHTML = '';
+      const strong = document.createElement('b');
+      strong.textContent = 'About ' + minutes + (minutes === 1 ? ' minute' : ' minutes') + ' away · travel fee +$' + (near ? 20 : 35);
+      out.append(strong, document.createElement('br'), 'Estimate without live traffic. The fee is added to your booking.');
+      if (book) book.hidden = false;
+    } catch {
+      if (input.value.trim() === query) out.textContent = 'Drive estimate unavailable right now. Try again, or pick the fee when you book.';
+    } finally {
+      clearTimeout(timeout);
+      if (pending === request) button.disabled = false;
+    }
+  });
 });
 
 function loadScript(src) {
@@ -76,17 +81,14 @@ function loadScript(src) {
     document.head.append(script);
   });
 }
-if (!framed && /^G-[A-Z0-9]+$/.test(analytics.measurementId)) {
-  window.dataLayer = window.dataLayer || [];
-  function tag() { window.dataLayer.push(arguments); }
-  tag('js', new Date());
-  tag('config', analytics.measurementId, {send_page_view: false});
-  function trackPage() {
+// The GA4 tag itself is in each page's <head>; this records one page view per screen of the one-page site.
+if (!framed && typeof window.gtag === 'function') {
+  const trackPage = () => {
     const section = document.querySelector('.screen.on');
-    if (!section || ['admin','texts','email','account','checkout'].includes(section.id)) return;
-    tag('event', 'page_view', {page_location: location.origin + location.pathname + '#' + section.id, page_title: section.id});
-  }
-  loadScript('https://www.googletagmanager.com/gtag/js?id=' + analytics.measurementId).then(trackPage).catch(() => {});
+    if (!section || ['admin','texts','email'].includes(section.id)) return;
+    window.gtag('event', 'page_view', {page_location: location.origin + location.pathname + '#' + section.id, page_title: section.id});
+  };
+  trackPage();
   window.addEventListener('hashchange', trackPage);
 }
 const loadReport = document.querySelector('#ga-load');
