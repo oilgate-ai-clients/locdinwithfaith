@@ -157,14 +157,19 @@ function getDepositAmount(serviceKey) {
 
 function getPayHandles() {
   const list = [];
-  if (settings.pay_cashapp) list.push({ label: 'Cash App', value: settings.pay_cashapp });
-  if (settings.pay_venmo) list.push({ label: 'Venmo', value: settings.pay_venmo });
-  if (settings.pay_zelle) list.push({ label: 'Zelle', value: settings.pay_zelle });
-  if (settings.pay_applepay) list.push({ label: 'Apple Pay', value: settings.pay_applepay });
-  if (settings.pay_other) list.push({ label: 'Other', value: settings.pay_other });
+  const entries = [
+    ['Cash App', settings.pay_cashapp],
+    ['Venmo', settings.pay_venmo],
+    ['Zelle', settings.pay_zelle],
+    ['Apple Pay', settings.pay_applepay],
+    ['Other', settings.pay_other]
+  ];
+  entries.forEach(([label, raw]) => {
+    const value = String(raw || '').trim();
+    if (value) list.push({ label, value });
+  });
   if (!list.length) {
     list.push({ label: 'Zelle', value: '(480) 806-7675' });
-    list.push({ label: 'Venmo / Apple Pay', value: 'Confirm handle with Faith · (480) 806-7675' });
   }
   return list;
 }
@@ -540,14 +545,14 @@ async function uploadProofFileToBucket(bookingId, file) {
   if (!isImageFile(file)) throw Error('Please choose an image file (JPG, PNG, WEBP, or HEIC screenshot).');
   if (file.size > MAX_PROOF_BYTES) throw Error('Screenshot is over 10 MB. Please choose a smaller image.');
   const client = await ensureSupabaseClient();
-  if (!client) throw Error('Studio database is not configured.');
+  if (!client) throw Error('Deposit uploads are temporarily unavailable. Please text Faith at (480) 806-7675.');
   const ext = safeFileExt(file.name);
   const path = `${bookingId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const up = await client.storage.from('deposit-proofs').upload(path, file, {
     contentType: file.type || 'image/jpeg',
     upsert: false
   });
-  if (up.error) throw Error(up.error.message || 'Upload blocked — run supabase/real-site.sql first.');
+  if (up.error) throw Error(up.error.message || 'Upload could not complete. Please try again or text Faith at (480) 806-7675.');
   return path;
 }
 
@@ -711,7 +716,7 @@ function wireBookingInteractions() {
         manualForm.reset();
         if (prevImg) prevImg.hidden = true;
       } catch (err) {
-        st.textContent = 'Could not send proof yet: ' + (err.message || 'Database update pending.');
+        st.textContent = 'Could not send proof yet: ' + (err.message || 'Please try again or text Faith at (480) 806-7675.');
         st.classList.add('err');
       } finally {
         submitBtn.disabled = false;
@@ -1401,18 +1406,24 @@ async function ensureAdminBooted() {
     if (signedEmail) signedEmail.textContent = session.user.email || 'Signed in';
     if (userBar) userBar.hidden = false;
 
-    // Verify admin privilege cleanly against RLS-protected site_settings or bookings
-    let allowed = true;
+    // Verify studio admin privilege via is_studio_admin() RPC (fail closed)
+    let allowed = false;
     try {
-      const check = await sb.from('site_settings').select('key,value');
-      if (!check.error && Array.isArray(check.data)) {
-        check.data.forEach(r => { settings[r.key] = r.value; });
-        realSiteSchemaReady = settings.real_site_schema_ready === 'true';
-      }
-      // Verify write eligibility via studio_admins / rpc if available; fallback to session presence
-      const probe = await sb.from('studio_admins').select('email').limit(1);
-      if (probe.error && /permission denied/i.test(probe.error.message || '')) allowed = false;
-    } catch { /* keep allowed true; individual writes enforce is_studio_admin() via RLS */ }
+      const { data, error } = await sb.rpc('is_studio_admin');
+      allowed = !error && data === true;
+    } catch {
+      allowed = false;
+    }
+
+    if (allowed) {
+      try {
+        const check = await sb.from('site_settings').select('key,value');
+        if (!check.error && Array.isArray(check.data)) {
+          check.data.forEach(r => { settings[r.key] = r.value; });
+          realSiteSchemaReady = settings.real_site_schema_ready === 'true';
+        }
+      } catch { /* keep public settings loaded earlier */ }
+    }
 
     isAdminVerified = allowed;
     if (gate) gate.hidden = true;
@@ -1435,20 +1446,35 @@ async function ensureAdminBooted() {
       e.preventDefault();
       pendingEmail = $('#signin-email').value.trim();
       if (!pendingEmail) return;
-      $('#signin-status').textContent = 'Sending sign-in email code…';
+      const statusEl = $('#signin-status');
+      const otpForm = $('#admin-otp-form');
+      if (otpForm) otpForm.hidden = true;
+      statusEl.textContent = 'Checking studio admin list…';
+
+      const allowCheck = await sb.rpc('admin_email_allowed', { p_email: pendingEmail });
+      if (allowCheck.error) {
+        statusEl.textContent = 'Could not verify studio admin list right now. Please try again.';
+        return;
+      }
+      if (allowCheck.data !== true) {
+        statusEl.textContent = "That email isn't on the studio admin list.";
+        return;
+      }
+
+      statusEl.textContent = 'Sending sign-in email code…';
       const { error } = await sb.auth.signInWithOtp({
         email: pendingEmail,
         options: {
           emailRedirectTo: location.origin + '/#admin',
-          shouldCreateUser: false
+          shouldCreateUser: true
         }
       });
       if (error) {
-        $('#signin-status').textContent = 'That email is not on the studio admin list yet.';
+        statusEl.textContent = 'Could not send sign-in code: ' + error.message;
         return;
       }
-      $('#signin-status').textContent = `Check ${pendingEmail} for your 6-digit code or sign-in link.`;
-      if ($('#admin-otp-form')) $('#admin-otp-form').hidden = false;
+      statusEl.textContent = `Check ${pendingEmail} for your 6-digit code or sign-in link.`;
+      if (otpForm) otpForm.hidden = false;
     };
   }
 
@@ -1472,6 +1498,26 @@ async function ensureAdminBooted() {
   }
 }
 
+/* ---------------- Temporary Admin Nav Tab ---------------- */
+function renderAdminNavLinks() {
+  if (!cfg.showAdminTab) return;
+  const snav = $('.snav');
+  if (snav && !snav.querySelector('a[href="#admin"]')) {
+    const a = document.createElement('a');
+    a.href = '#admin';
+    a.dataset.s = 'admin';
+    a.textContent = 'Admin';
+    snav.append(a);
+  }
+  const mnav = $('#mnav');
+  if (mnav && !mnav.querySelector('a[href="#admin"]')) {
+    const a = document.createElement('a');
+    a.href = '#admin';
+    a.textContent = 'Admin';
+    mnav.append(a);
+  }
+}
+
 /* ---------------- Route Listener ---------------- */
 function syncRouteState() {
   const hash = location.hash || '#home';
@@ -1487,6 +1533,7 @@ function syncRouteState() {
   }
 }
 
+renderAdminNavLinks();
 wireBookingInteractions();
 await loadPublic();
 syncRouteState();
