@@ -5,13 +5,30 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Studio Admin · Loc'd In with Faith</title>
   <meta name="robots" content="noindex,nofollow">
-  <meta http-equiv="refresh" content="0; url=/#admin">
   <script>
     (function () {
-      var target = '/#admin' + (location.search || '');
-      location.replace(target);
+      var hash = location.hash || '';
+      var search = location.search || '';
+      var isAuthReturn =
+        hash.indexOf('access_token=') !== -1 ||
+        hash.indexOf('refresh_token=') !== -1 ||
+        hash.indexOf('error=') !== -1 ||
+        hash.indexOf('error_code=') !== -1 ||
+        hash.indexOf('type=magiclink') !== -1 ||
+        hash.indexOf('type=signup') !== -1 ||
+        hash.indexOf('type=recovery') !== -1 ||
+        hash.indexOf('type=email') !== -1 ||
+        /[?&](code|token_hash|error)=/i.test(search);
+      if (isAuthReturn) {
+        var params = new URLSearchParams(search);
+        params.set('auth_target', 'admin');
+        location.replace('/?' + params.toString() + hash);
+        return;
+      }
+      location.replace('/#admin' + search);
     })();
   </script>
+  <noscript><meta http-equiv="refresh" content="0; url=/#admin"></noscript>
   <style>
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0A080A; color: #FFF5F9; font: 15px/1.6 system-ui, sans-serif; padding: 24px; text-align: center; }
     a { color: #FF86C4; font-weight: 700; }
