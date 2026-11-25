@@ -10,14 +10,6 @@ const MAX_PROOF_BYTES = 10 * 1024 * 1024; // 10 MB
 const MAX_CLIENT_PHOTO_BYTES = 10 * 1024 * 1024;
 const AUTH_STORAGE_KEY = 'faith-studio-auth';
 const LOCAL_BOOKINGS_CACHE_PREFIX = 'faith_client_bookings_';
-const LOGO_SHORTLIST_IDS = [
-  'flyer-chrome-pink',
-  'flyer-stacked-crest',
-  'neon-gloss-script',
-  'pink-foil-bar',
-  'bow-chrome-classic',
-  'gloss-italic-bold'
-];
 
 const SERVICES = {
   retwist: {
@@ -490,6 +482,7 @@ function applyLogoAndPayHandles() {
   const activeLogo = settings.active_logo || localStorage.getItem('faith_logo_preview') || 'flyer-chrome-pink';
   selectedLogoId = activeLogo;
   if (window.FAITH_LOGO_API) window.FAITH_LOGO_API.apply(activeLogo);
+  renderLogoPicker();
 
   const handlesHtml = renderPayHandlesHtml();
   $$('[data-pay-handles]').forEach(el => { el.innerHTML = handlesHtml; });
@@ -2497,27 +2490,33 @@ function renderAdminReviewsList() {
 }
 
 /* ---------------- Admin Decisions (4 Only + 12 Read-only Defaults) ---------------- */
-function renderLogoShortlist() {
-  const wrap = $('#admin-logo-shortlist');
+function renderLogoPicker() {
+  const wrap = $('#admin-logo-picker');
   if (!wrap) return;
   const allLogos = window.FAITH_LOGOS || [];
-  const shortlist = LOGO_SHORTLIST_IDS.map(id => allLogos.find(l => l.id === id)).filter(Boolean);
-  if (!shortlist.length) return;
+  if (!allLogos.length) return;
+  if (window.FAITH_LOGO_API && !document.getElementById('faith-logo-symbols')) {
+    window.FAITH_LOGO_API.apply(selectedLogoId);
+  }
 
-  wrap.replaceChildren(...shortlist.map((logo, idx) => {
+  wrap.replaceChildren(...allLogos.map((logo, idx) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'logo-choice-card' + (selectedLogoId === logo.id ? ' on' : '');
+    btn.dataset.logoId = logo.id;
+    btn.setAttribute('aria-pressed', selectedLogoId === logo.id ? 'true' : 'false');
+    const markup = typeof logo.render === 'function'
+      ? logo.render()
+      : (window.FAITH_LOGO_API ? window.FAITH_LOGO_API.renderHtml(logo.id) : '');
     btn.innerHTML = `
-      <div class="logo-choice-stage">${logo.svg}</div>
+      <div class="logo-choice-stage">${markup}</div>
       <div class="logo-choice-meta">#${idx + 1} · ${escapeHtml(logo.name)}</div>
-      <div class="logo-choice-note">${escapeHtml(logo.note || '')}</div>
     `;
     btn.onclick = () => {
       selectedLogoId = logo.id;
       localStorage.setItem('faith_logo_preview', logo.id);
       if (window.FAITH_LOGO_API) window.FAITH_LOGO_API.apply(logo.id);
-      renderLogoShortlist();
+      renderLogoPicker();
     };
     return btn;
   }));
@@ -2536,7 +2535,7 @@ function hydrateDecisionForms() {
   if (logoAns.logo_id) selectedLogoId = logoAns.logo_id;
   if ($('#dec-logo-note')) $('#dec-logo-note').value = logoAns.logo_note || '';
   if ($('#dec-logo-status')) $('#dec-logo-status').textContent = logoAns.logo_name ? `Saved: ${logoAns.logo_name}` : '';
-  renderLogoShortlist();
+  renderLogoPicker();
 
   const hoursAns = decisionAnswers.studio_hours || {};
   $$('[data-dec-hours]').forEach(inp => {

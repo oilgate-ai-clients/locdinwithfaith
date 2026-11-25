@@ -1183,7 +1183,7 @@ section.blk + section.blk:not(.paper) { padding-top: 0; }
 .default-item b { display: block; color: var(--cream); margin-bottom: 2px; }
 .default-item span { color: var(--muted); }
 
-/* ---------- Admin Forms, Logo Shortlist & Photo Cropper ---------- */
+/* ---------- Admin Forms, Logo Picker & Photo Cropper ---------- */
 .studio-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; max-width: 680px; width: 100%; min-width: 0; }
 .studio-form label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--cream); }
 .studio-form input, .studio-form select, .studio-form textarea {
@@ -1266,7 +1266,13 @@ section.blk + section.blk:not(.paper) { padding-top: 0; }
   text-align: left;
   cursor: pointer;
 }
-.logo-choice-card.on { border-color: var(--pink); box-shadow: var(--ring-shadow); }
+.owner .logo-choice-card {
+  background: var(--night);
+  color: var(--cream);
+  border: 1.5px solid var(--line2);
+}
+.logo-choice-card.on,
+.owner .logo-choice-card.on { border-color: var(--pink); box-shadow: var(--ring-shadow); }
 .logo-choice-stage {
   min-height: 52px;
   display: flex;
@@ -1278,7 +1284,6 @@ section.blk + section.blk:not(.paper) { padding-top: 0; }
   overflow: hidden;
 }
 .logo-choice-meta { font-size: 12px; color: var(--pink-chrome); font-weight: 600; }
-.logo-choice-note { font-size: 11px; color: var(--muted); }
 
 /* ---------- Polish & Mobile Overrides ---------- */
 .adp { white-space: nowrap; flex: 0 0 auto; font-weight: 700; }
